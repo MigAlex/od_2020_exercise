@@ -24,31 +24,31 @@ class _HomeVigenereState extends State<HomeVigenere> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   controller: _plainText,
-                  decoration:
-                      InputDecoration(labelText: 'tekst'),
+                  decoration: InputDecoration(
+                      hintText: 'Plaintext/kryptogram',
+                      icon: Icon(Icons.login)),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  controller: _keyValue,
-                  decoration: InputDecoration(labelText: 'Wartość klucza'),
-                ),
+                    controller: _keyValue,
+                    decoration: InputDecoration(
+                        hintText: 'klucz szyfrowania',
+                        icon: Icon(Icons.vpn_key))),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  FlatButton(
-                    onPressed: _decrypt,
-                    child: Text('Odszyfruj'),
-                    color: Colors.green,
-                  ),
-                  FlatButton(
+                  RaisedButton(
                     onPressed: _encrypt,
                     child: Text('Zaszyfruj'),
-                    color: Colors.green,
                   ),
-                  FlatButton(
+                  RaisedButton(
+                    onPressed: _decrypt,
+                    child: Text('Odszyfruj'),
+                  ),
+                  RaisedButton(
                     onPressed: _delete,
                     child: Text('Wykasuj'),
                     color: Colors.red,
@@ -66,6 +66,9 @@ class _HomeVigenereState extends State<HomeVigenere> {
   void _decrypt() {
     var offset = _keyValue.text;
     var text = _plainText.text;
+    if (offset.length != text.length) {
+      _showAlert('Klucz musi być tej samej długości co plaintext/szyfrogram');
+    }
     VigenereCipher _vigenereCipher = VigenereCipher(offset);
     _result = _vigenereCipher.decrypt(text);
     setState(() {});
@@ -74,17 +77,51 @@ class _HomeVigenereState extends State<HomeVigenere> {
   void _encrypt() {
     var offset = _keyValue.text;
     var text = _plainText.text;
+    if (offset.length != text.length) {
+      _showAlert('Klucz musi być tej samej długości co plaintext/szyfrogram');
+    }
     VigenereCipher _vigenereCipher = VigenereCipher(offset);
     _result = _vigenereCipher.encrypt(text);
     setState(() {});
   }
 
-   void _delete() {
+  void _delete() {
     _plainText.clear();
     _keyValue.clear();
     setState(() {
       _result = "";
     });
+  }
+
+  Future _showAlert(String _alert) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Coś się skaszaniło'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text(_alert),
+              ],
+            ),
+          ),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  _keyValue.clear();
+                  _plainText.clear();
+                  _result = "";
+                });
+              },
+              child: Text('Oki doki'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -98,7 +135,8 @@ class CryptionResult extends StatelessWidget {
       margin: EdgeInsets.only(top: 16),
       child: Column(
         children: [
-          Text('Output: ', style: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic)),
+          Text('Output: ',
+              style: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic)),
           Container(
             child: Text(
               result,

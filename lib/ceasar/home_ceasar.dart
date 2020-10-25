@@ -6,8 +6,8 @@ class HomeCeasar extends StatefulWidget {
 }
 
 class _HomeCeasarState extends State<HomeCeasar> {
-  var _wordController = TextEditingController();
-  var _keyController = TextEditingController();
+  final _wordController = TextEditingController();
+  final _keyController = TextEditingController();
   String _result = "";
 
   @override
@@ -27,18 +27,18 @@ class _HomeCeasarState extends State<HomeCeasar> {
           Container(
             padding: EdgeInsets.all(16),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextField(
-                  decoration: InputDecoration(hintText: 'plaintext/kryptogram'),
+                  decoration: InputDecoration(hintText: 'Plaintext/kryptogram', icon: Icon(Icons.login)),
                   controller: _wordController,
                   keyboardType: TextInputType.text,
                 ),
                 SizedBox(height: 24),
                 TextField(
-                  decoration: InputDecoration(hintText: 'klucz szyfrowania'),
+                  decoration: InputDecoration(hintText: 'klucz szyfrowania', icon: Icon(Icons.vpn_key)),
                   controller: _keyController,
                   keyboardType: TextInputType.number,
-                  
                 ),
                 SizedBox(height: 24),
                 Row(
@@ -91,6 +91,10 @@ class _HomeCeasarState extends State<HomeCeasar> {
 
     try {
       _key = int.parse(_keyController.text);
+      if (_key >= 26) {
+        _showAlert(
+            'Nieprawidłowy klucz - przesunięcie musi być mniejsze niż 26 (długość alfabetu)');
+      }
     } catch (e) {
       _showAlert("Nieprawidłowy klucz - przesunięcie musi być intem");
     }
@@ -152,6 +156,11 @@ class _HomeCeasarState extends State<HomeCeasar> {
             FlatButton(
               onPressed: () {
                 Navigator.pop(context);
+                _keyController.clear();
+                _wordController.clear();
+                setState(() {
+                  _result = "";
+                });
               },
               child: Text('Oki doki'),
             ),
