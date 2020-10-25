@@ -100,14 +100,14 @@ class _HomeCeasarState extends State<HomeCeasar> {
     }
 
     for (int i = 0; i < _text.length; i++) {
-      int ch = _text.codeUnitAt(i);
+      int char = _text.codeUnitAt(i);
       int offset;
-      String h;
-      if (ch >= 'a'.codeUnitAt(0) && ch <= 'z'.codeUnitAt(0)) {
+      String resultBuilder;
+      if (char >= 'a'.codeUnitAt(0) && char <= 'z'.codeUnitAt(0)) {
         offset = 97;
-      } else if (ch >= 'A'.codeUnitAt(0) && ch <= 'Z'.codeUnitAt(0)) {
+      } else if (char >= 'A'.codeUnitAt(0) && char <= 'Z'.codeUnitAt(0)) {
         offset = 65;
-      } else if (ch == ' '.codeUnitAt(0)) {
+      } else if (char == ' '.codeUnitAt(0)) {
         _temp += " ";
         continue;
       } else {
@@ -118,12 +118,12 @@ class _HomeCeasarState extends State<HomeCeasar> {
 
       int c;
       if (_isEncrypt) {
-        c = (ch + _key - offset) % 26;
+        c = (char + _key - offset) % 26;
       } else {
-        c = (ch - _key - offset) % 26;
+        c = (char - _key - offset) % 26;
       }
-      h = String.fromCharCode(c + offset);
-      _temp += h;
+      resultBuilder = String.fromCharCode(c + offset);
+      _temp += resultBuilder;
     }
 
     setState(() {

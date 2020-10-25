@@ -15,16 +15,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-/*
-          Tooltip(
-            message: 'do Vigenere\'a',
-            child: IconButton(
-              icon: Icon(Icons.folder_open),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeVigenere()));
-              },
-            ),
-          )
-*/
